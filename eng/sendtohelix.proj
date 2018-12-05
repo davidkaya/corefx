@@ -19,9 +19,8 @@
     <EnableXunitReporter>true</EnableXunitReporter>
     
     <!-- The helix runtime payload and the tests to run -->
-    <!-- TODO: Use TestArchiveDir properties once: https://github.com/dotnet/corefx/pull/33423 -->
-    <HelixCorrelationPayload Condition="'$(HelixCorrelationPayload)' == ''">$(ArtifactsDir)\**\tests\**\archive\test-runtime*.zip</HelixCorrelationPayload>
-    <WorkItemArchiveWildCard Condition="'$(WorkItemArchiveWildCard)' == ''">$(ArtifactsDir)\**\tests\**\archive\tests\**\*.zip</WorkItemArchiveWildCard>
+    <HelixCorrelationPayload Condition="'$(HelixCorrelationPayload)' == ''">$(TestArchiveRuntimeRoot)test-runtime-$(BuildConfiguration).zip</HelixCorrelationPayload>
+    <WorkItemArchiveWildCard Condition="'$(WorkItemArchiveWildCard)' == ''">$(TestArchiveTestsRoot)**/*.zip</WorkItemArchiveWildCard>
 
     <HelixConfiguration>$(ConfigurationGroup)</HelixConfiguration>
     <HelixArchitecture>$(ArchGroup)</HelixArchitecture>
