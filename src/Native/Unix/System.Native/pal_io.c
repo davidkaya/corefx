@@ -158,6 +158,7 @@ static void ConvertFileStatus(const struct stat_* src, FileStatus* dst)
     dst->Uid = src->st_uid;
     dst->Gid = src->st_gid;
     dst->Size = src->st_size;
+    dst->UserFlags = src->st_flags;
 
     dst->ATime = src->st_atime;
     dst->MTime = src->st_mtime;
@@ -1399,4 +1400,11 @@ int32_t SystemNative_LockFileRegion(intptr_t fd, int64_t offset, int64_t length,
     int32_t ret;
     while ((ret = fcntl (ToFileDescriptor(fd), F_SETLK, &lockArgs)) < 0 && errno == EINTR);
     return ret;
+}
+
+int32_t SystemNative_LChflags(const char* path, uint32_t flags)
+{
+    int32_t result;
+    while ((result = lchflags(path, flags)) < 0);
+    return result;
 }
