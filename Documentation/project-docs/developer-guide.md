@@ -281,7 +281,7 @@ Use this attribute on test methods to specify that this test may only be run on 
 - `nonlinuxtests` for tests that don't run on Linux
 - `nonosxtests` for tests that don't run on OS X
 
-**[Available Test Platforms](https://github.com/dotnet/buildtools/blob/master/src/Microsoft.DotNet.XUnitExtensions/TestPlatforms.cs#L10)**
+**[Available Test Platforms](https://github.com/dotnet/arcade/blob/master/src/Microsoft.DotNet.XUnitExtensions/src/TestPlatforms.cs)**
 
 When running tests by building a test project, tests that don't apply to the `OSGroup` are not run. For example, to run Linux-specific tests on a Linux box, use the following command line:
 ```sh
@@ -333,7 +333,7 @@ Use this attribute over test methods to skip tests only on the specific target f
 
 If it needs to be skipped in multiple frameworks and the reasons are different please use two attributes on the same test so that you can specify different reasons for each framework.
 
-**Currently this are the [Framework Monikers](https://github.com/dotnet/buildtools/blob/master/src/Microsoft.DotNet.XUnitExtensions/TargetFrameworkMonikers.cs#L23-L26) that we support through our test execution infrastructure**
+**Currently this are the [Framework Monikers](https://github.com/dotnet/arcade/blob/master/src/Microsoft.DotNet.XUnitExtensions/src/TargetFrameworkMonikers.cs#L23-L26) that we support through our test execution infrastructure**
 
 #### ConditionalFactAttribute
 Use this attribute to run the test only when a condition is `true`. This attribute is used when `ActiveIssueAttribute` or `SkipOnTargetFrameworkAttribute` are not flexible enough due to needing to run a custom logic at test time. This test behaves as a `[Fact]` test that has no test data passed in as a parameter.
