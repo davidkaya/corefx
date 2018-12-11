@@ -33,7 +33,7 @@ internal static partial class Interop
             internal long BirthTimeNsec;
             internal long Dev;
             internal long Ino;
-            internal UserFlags UserFlags;
+            internal uint UserFlags;
         }
 
         internal static class FileTypes
@@ -52,13 +52,6 @@ internal static partial class Interop
         {
             None = 0,
             HasBirthTime = 1,
-        }
-
-        [Flags]
-        internal enum UserFlags : uint
-        {
-            None = 0x0000,
-            UF_HIDDEN = 0x8000
         }
 
         [DllImport(Libraries.SystemNative, EntryPoint = "SystemNative_FStat2", SetLastError = true)]

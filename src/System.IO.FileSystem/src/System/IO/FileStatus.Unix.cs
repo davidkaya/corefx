@@ -85,7 +85,7 @@ namespace System.IO
                 attributes |= FileAttributes.Directory;
 
             // If the filename starts with a period or has UF_HIDDEN flag set, it's hidden.
-            if (fileName.Length > 0 && (fileName[0] == '.' || (_fileStatus.UserFlags & Interop.Sys.UserFlags.UF_HIDDEN) == Interop.Sys.UserFlags.UF_HIDDEN))
+            if (fileName.Length > 0 && (fileName[0] == '.' || (_fileStatus.UserFlags & (uint)Interop.Sys.UserFlags.UF_HIDDEN) == (uint)Interop.Sys.UserFlags.UF_HIDDEN))
                 attributes |= FileAttributes.Hidden;
 
             return attributes != default ? attributes : FileAttributes.Normal;
@@ -114,9 +114,9 @@ namespace System.IO
                 FileSystemInfo.ThrowNotFound(path);
 
             if ((attributes & FileAttributes.Hidden) != 0)
-                Interop.Sys.LChflags(path, Interop.Sys.UserFlags.UF_HIDDEN);
+                Interop.Sys.LChflags(path, (uint)Interop.Sys.UserFlags.UF_HIDDEN);
             else
-                Interop.Sys.LChflags(path, (_fileStatus.UserFlags & ~Interop.Sys.UserFlags.UF_HIDDEN));
+                Interop.Sys.LChflags(path, (_fileStatus.UserFlags & ~(uint)Interop.Sys.UserFlags.UF_HIDDEN));
 
             // The only thing we can reasonably change is whether the file object is readonly by changing permissions.
 

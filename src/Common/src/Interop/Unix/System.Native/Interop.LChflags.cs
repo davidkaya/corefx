@@ -7,7 +7,13 @@ internal static partial class Interop
 {
     internal static partial class Sys
     {
+        [Flags]
+        internal enum UserFlags : uint
+        {
+            UF_HIDDEN = 0x00008000
+        }
+
         [DllImport(Libraries.SystemNative, EntryPoint = "SystemNative_LChflags", SetLastError = true)]
-        internal static extern int LChflags(string path, UserFlags flags);
+        internal static extern int LChflags(string path, uint flags);
     }
 }

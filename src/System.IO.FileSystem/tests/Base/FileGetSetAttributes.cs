@@ -44,6 +44,7 @@ namespace System.IO.Tests
         [InlineData(FileAttributes.SparseFile)]
         [InlineData(FileAttributes.ReparsePoint)]
         [InlineData(FileAttributes.Compressed)]
+        [InlineData(FileAttributes.Hidden)]
         [PlatformSpecific(TestPlatforms.AnyUnix)]
         public void SettingInvalidAttributes_Unix(FileAttributes attributes)
         {
