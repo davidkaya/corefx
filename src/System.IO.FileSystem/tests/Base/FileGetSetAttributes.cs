@@ -16,9 +16,16 @@ namespace System.IO.Tests
         public void SettingAttributes_Unix(FileAttributes attributes)
         {
             string path = CreateItem();
-            SetAttributes(path, attributes);
-            Assert.Equal(attributes, GetAttributes(path));
-            SetAttributes(path, 0);
+            AssertSettingAttributes(path, attributes);
+        }
+
+        [Theory]
+        [InlineData(FileAttributes.Hidden)]
+        [PlatformSpecific(TestPlatforms.OSX | TestPlatforms.FreeBSD)]
+        public void SettingAttributes_OSX(FileAttributes attributes)
+        {
+            string path = CreateItem();
+            AssertSettingAttributes(path, attributes);
         }
 
         [Theory]
@@ -33,6 +40,11 @@ namespace System.IO.Tests
         public void SettingAttributes_Windows(FileAttributes attributes)
         {
             string path = CreateItem();
+            AssertSettingAttributes(path, attributes);
+        }
+
+        private void AssertSettingAttributes(string path, FileAttributes attributes)
+        {
             SetAttributes(path, attributes);
             Assert.Equal(attributes, GetAttributes(path));
             SetAttributes(path, 0);
@@ -45,12 +57,24 @@ namespace System.IO.Tests
         [InlineData(FileAttributes.ReparsePoint)]
         [InlineData(FileAttributes.Compressed)]
         [InlineData(FileAttributes.Hidden)]
-        [PlatformSpecific(TestPlatforms.AnyUnix)]
-        public void SettingInvalidAttributes_Unix(FileAttributes attributes)
+        [PlatformSpecific(TestPlatforms.AnyUnix & ~(TestPlatforms.OSX | TestPlatforms.FreeBSD))]
+        public void SettingInvalidAttributes_UnixExceptOSX(FileAttributes attributes)
         {
             string path = CreateItem();
-            SetAttributes(path, attributes);
-            Assert.Equal(FileAttributes.Normal, GetAttributes(path));
+            AssertSettingInvalidAttributes(path, attributes);
+        }
+
+        [Theory]
+        [InlineData(FileAttributes.Temporary)]
+        [InlineData(FileAttributes.Encrypted)]
+        [InlineData(FileAttributes.SparseFile)]
+        [InlineData(FileAttributes.ReparsePoint)]
+        [InlineData(FileAttributes.Compressed)]
+        [PlatformSpecific(TestPlatforms.OSX | TestPlatforms.FreeBSD)]
+        public void SettingInvalidAttributes_OSX(FileAttributes attributes)
+        {
+            string path = CreateItem();
+            AssertSettingInvalidAttributes(path, attributes);
         }
 
         [Theory]
@@ -63,6 +87,11 @@ namespace System.IO.Tests
         public void SettingInvalidAttributes_Windows(FileAttributes attributes)
         {
             string path = CreateItem();
+            AssertSettingInvalidAttributes(path, attributes);
+        }
+
+        private void AssertSettingInvalidAttributes(string path, FileAttributes attributes)
+        {
             SetAttributes(path, attributes);
             Assert.Equal(FileAttributes.Normal, GetAttributes(path));
         }
