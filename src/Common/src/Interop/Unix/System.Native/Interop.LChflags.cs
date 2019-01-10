@@ -15,5 +15,10 @@ internal static partial class Interop
 
         [DllImport(Libraries.SystemNative, EntryPoint = "SystemNative_LChflags", SetLastError = true)]
         internal static extern int LChflags(string path, uint flags);
+
+        internal static readonly bool CanSetHiddenFlag = (LChflagsCanSetHiddenFlag() != 0);
+
+        [DllImport(Libraries.SystemNative, EntryPoint = "SystemNative_LChflagsCanSetHiddenFlag")]
+        private static extern int LChflagsCanSetHiddenFlag();
     }
 }

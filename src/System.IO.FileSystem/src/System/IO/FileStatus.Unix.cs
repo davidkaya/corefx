@@ -113,10 +113,19 @@ namespace System.IO
             if (!_exists)
                 FileSystemInfo.ThrowNotFound(path);
 
-            if ((attributes & FileAttributes.Hidden) != 0)
-                Interop.Sys.LChflags(path, (uint)Interop.Sys.UserFlags.UF_HIDDEN);
-            else
-                Interop.Sys.LChflags(path, (_fileStatus.UserFlags & ~(uint)Interop.Sys.UserFlags.UF_HIDDEN));
+            if (Interop.Sys.CanSetHiddenFlag)
+            {
+                if ((attributes & FileAttributes.Hidden) != 0 && (_fileStatus.UserFlags & (uint)Interop.Sys.UserFlags.UF_HIDDEN) != (uint)Interop.Sys.UserFlags.UF_HIDDEN)
+                {
+                    // If Hidden flag is set and cached file status does not have the flag set then set it
+                    Interop.Sys.LChflags(path, (uint)Interop.Sys.UserFlags.UF_HIDDEN);
+                }
+                else if ((attributes & FileAttributes.Hidden) == 0 && (_fileStatus.UserFlags & (uint)Interop.Sys.UserFlags.UF_HIDDEN) == (uint)Interop.Sys.UserFlags.UF_HIDDEN)
+                {
+                    // If Hidden flag is not set and cached file status does have the flag set then remove it
+                    Interop.Sys.LChflags(path, (_fileStatus.UserFlags & ~(uint)Interop.Sys.UserFlags.UF_HIDDEN));
+                }
+            }
 
             // The only thing we can reasonably change is whether the file object is readonly by changing permissions.
 

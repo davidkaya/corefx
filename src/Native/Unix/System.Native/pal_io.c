@@ -158,7 +158,6 @@ static void ConvertFileStatus(const struct stat_* src, FileStatus* dst)
     dst->Uid = src->st_uid;
     dst->Gid = src->st_gid;
     dst->Size = src->st_size;
-    dst->UserFlags = src->st_flags;
 
     dst->ATime = src->st_atime;
     dst->MTime = src->st_mtime;
@@ -176,6 +175,12 @@ static void ConvertFileStatus(const struct stat_* src, FileStatus* dst)
     // Linux path: until we use statx() instead
     dst->BirthTime = 0;
     dst->BirthTimeNsec = 0;
+#endif
+
+#if HAVE_STAT_FLAGS
+    dst->UserFlags = src->st_flags;
+#else
+    dst->UserFlags = 0;
 #endif
 }
 
@@ -1421,7 +1426,22 @@ int32_t SystemNative_LockFileRegion(intptr_t fd, int64_t offset, int64_t length,
 
 int32_t SystemNative_LChflags(const char* path, uint32_t flags)
 {
+#if HAVE_LCHFLAGS
     int32_t result;
     while ((result = lchflags(path, flags)) < 0);
     return result;
+#else
+    (void)path, (void)flags;
+    errno = ENOTSUP;
+    return -1;
+#endif
+}
+
+int32_t SystemNative_LChflagsCanSetHiddenFlag(void)
+{
+#if defined(UF_HIDDEN) && defined(HAVE_STAT_FLAGS) && defined(HAVE_LCHFLAGS)
+    return true;
+#else
+    return false;
+#endif
 }

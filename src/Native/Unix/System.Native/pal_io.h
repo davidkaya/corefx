@@ -712,3 +712,10 @@ DLLEXPORT int32_t SystemNative_LockFileRegion(intptr_t fd, int64_t offset, int64
 * Returns 0 for success, -1 for failure. Sets errno for failure.
 */
 DLLEXPORT int32_t SystemNative_LChflags(const char* path, uint32_t flags);
+
+/**
+ * Determines if the current platform supports setting UF_HIDDEN (0x8000) flag
+ *
+ * Returns true (non-zero) if supported, false (zero) if not.
+ */
+DLLEXPORT int32_t SystemNative_LChflagsCanSetHiddenFlag(void);
