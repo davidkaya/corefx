@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="ExcludeRestorePackageImports;Configuration">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="ExcludeRestorePackageImports">
   <!-- Base repo layout properties -->
   <PropertyGroup>
     <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
@@ -92,8 +92,6 @@
   <PropertyGroup>
     <ProjectAssetsFile Condition="'$(ProjectAssetsFile)' == 'unused'"></ProjectAssetsFile>
     <ExcludeRestorePackageImports>$(_excludeRestorePackageImports)</ExcludeRestorePackageImports>
-    <!-- always set $(ConfigurationGroup) even if it wasn't passed in, Configuration is treated as local so this will update even if specified globally -->
-    <Configuration Condition="!$(_parse_Configuration.Contains('-$(ConfigurationGroup)-'))">$(Configuration)-$(ConfigurationGroup)</Configuration>
   </PropertyGroup>
 
   <!-- Common repo directories -->
@@ -478,11 +476,15 @@
   <PropertyGroup Condition="'$(IsSourceProject)' == 'true'">
     <!-- Set the documentation output file globally. -->
     <DocumentationFile Condition="'$(DocumentationFile)' == ''">$(OutputPath)$(MSBuildProjectName).xml</DocumentationFile>
-    <!-- We ignore all documentation related warnings. -->
-    <NoWarn>$(NoWarn);1573;1591</NoWarn>
   </PropertyGroup>
 
   <!-- Use Roslyn Compilers to build -->
   <Import Project="$(RoslynPropsFile)" Condition="'$(RunningOnUnix)'!='true' and Exists('$(RoslynPropsFile)') and '$(UseRoslynCompilers)'!='false' and '$(RoslynIncompatibleMsbuildVersion)' != 'true'" />
   <Import Project="$(RoslynPropsFile)" Condition="'$(RunningOnUnix)'=='true' and Exists('$(RoslynPropsFile)') and '$(RoslynIncompatibleMsbuildVersion)' != 'true'" />
+
+  <!-- Additional optimizations -->
+  <PropertyGroup>
+    <!-- Clear the init locals flag on all src projects, except those in VB, where we can't use spans. -->
+    <ILLinkClearInitLocals Condition="'$(IsSourceProject)' == 'true' AND '$(Language)' != 'VB'">true</ILLinkClearInitLocals>
+  </PropertyGroup>
 </Project>
