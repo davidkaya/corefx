@@ -22,7 +22,7 @@ namespace System.IO.Tests
         [Theory]
         [InlineData(FileAttributes.Hidden)]
         [PlatformSpecific(TestPlatforms.OSX | TestPlatforms.FreeBSD)]
-        public void SettingAttributes_OSX(FileAttributes attributes)
+        public void SettingAttributes_OSXAndFreeBSD(FileAttributes attributes)
         {
             string path = CreateItem();
             AssertSettingAttributes(path, attributes);
@@ -56,22 +56,17 @@ namespace System.IO.Tests
         [InlineData(FileAttributes.SparseFile)]
         [InlineData(FileAttributes.ReparsePoint)]
         [InlineData(FileAttributes.Compressed)]
-        [InlineData(FileAttributes.Hidden)]
-        [PlatformSpecific(TestPlatforms.AnyUnix & ~(TestPlatforms.OSX | TestPlatforms.FreeBSD))]
-        public void SettingInvalidAttributes_UnixExceptOSX(FileAttributes attributes)
+        [PlatformSpecific(TestPlatforms.AnyUnix)]
+        public void SettingInvalidAttributes_Unix(FileAttributes attributes)
         {
             string path = CreateItem();
             AssertSettingInvalidAttributes(path, attributes);
         }
 
         [Theory]
-        [InlineData(FileAttributes.Temporary)]
-        [InlineData(FileAttributes.Encrypted)]
-        [InlineData(FileAttributes.SparseFile)]
-        [InlineData(FileAttributes.ReparsePoint)]
-        [InlineData(FileAttributes.Compressed)]
-        [PlatformSpecific(TestPlatforms.OSX | TestPlatforms.FreeBSD)]
-        public void SettingInvalidAttributes_OSX(FileAttributes attributes)
+        [InlineData(FileAttributes.Hidden)]
+        [PlatformSpecific(TestPlatforms.AnyUnix & ~(TestPlatforms.OSX | TestPlatforms.FreeBSD))]
+        public void SettingInvalidAttributes_UnixExceptOSXAndFreeBSD(FileAttributes attributes)
         {
             string path = CreateItem();
             AssertSettingInvalidAttributes(path, attributes);
